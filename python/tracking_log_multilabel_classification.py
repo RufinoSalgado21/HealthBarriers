@@ -60,24 +60,30 @@ def replace_multi(string, list=[], replacement=''):
         string = string.replace(ls,replacement)
     return string
 
-def count_uniques(col, new_df, most_common_column, next_most_common):
+def count_uniques(col, new_df, num_of_most_common):
+    length = len(new_df[col])
+
+    for n in range(num_of_most_common):
+        new_col = col + '_' + str(n)
+        new_df[new_col] = ['x'] * length
+
     for index, r in enumerate(new_df[col]):
         unqs = list(set(r.split(',')))
         zeroes = [0] * len(unqs)
         dct = dict(zip(unqs, zeroes))
-        max_count = 0
-        second_max = 0
+
         for i in dct.keys():
             c = r.count(i)
             dct[i] = c
-            if c > max_count:
-                second_max = max_count
-                new_df[next_most_common][index] = new_df[most_common_column][index]
-                max_count = c
-                new_df[most_common_column][index] = i
-            elif c > second_max:
-                second_max = c
-                new_df[next_most_common][index] = i
+
+        sorted_vals = sorted(dct.items(), key=lambda x: x[1], reverse=True)
+
+        for n in range(num_of_most_common):
+            new_col = col + '_' + str(n)
+            if len(sorted_vals) > n:
+                new_df[new_col][index] = sorted_vals[n][0]
+            else:
+                new_df[new_col][index] = sorted_vals[len(sorted_vals)-1][0]
 
         lst = []
         for k in dct.keys():
@@ -100,13 +106,9 @@ def main():
     print('Rows grouped by subject IDs.')
 
     #Remove duplicates in each row of each column
-    length = len(new_df['R24Barrier'])
-    new_df['Most Common Barrier'] = [' ']*length
-    new_df['Next Most Common Barrier'] = [' ']*length
-    new_df['Most Common Action'] = [' '] * length
-    new_df['Next Most Common Action'] = [' '] * length
-    count_uniques('R24Barrier', new_df,'Most Common Barrier', 'Next Most Common Barrier')
-    count_uniques('R24Action', new_df, "Most Common Action", 'Next Most Common Action')
+
+    count_uniques('R24Barrier', new_df,2)
+    count_uniques('R24Action', new_df, 2)
     print('Duplicate values in columns removed.')
 
     #Inner merge two datasets, returning df of items with all features available
@@ -118,16 +120,7 @@ def main():
     csv_lists = inner_merged.values.tolist()
 
     #Write new lists to csv file
-    path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'merged.csv'
-    with open(path, 'w', newline='') as file:
-        writer = csv.writer(file)
-        writer.writerow(cols_list)
-        for c in csv_lists:
-            c[1].sort()
-            c[2].sort()
-            c[1] = replace_multi(str(c[1]),['[', ']', '\'', ','],'')
-            c[2] = replace_multi(str(c[2]),['[', ']', '\'', ','],'')
-            writer.writerow(c)
+    write_to_csv(cols_list, csv_lists)
 
     merged_df = read_file('files','merged.csv')
     merged_np = merged_df.values.tolist()
@@ -136,14 +129,13 @@ def main():
         row[1] = row[1].split(' ')
         row[2] = row[2].split(' ')
 
-    7
     features = merged_df.iloc[:,7:25].values
-    print(merged_df.iloc[:,7:25])
+    #print(merged_df.iloc[:,7:25])
     labels_barrier = merged_df.iloc[:,3]
     labels_action = merged_df.iloc[:,5]
-    print(features)
-    print(labels_barrier)
-    print(labels_action)
+    #print(features)
+    #print(labels_barrier)
+    #print(labels_action)
 
     encoder = LabelEncoder()
     encoder.fit(labels_barrier)
@@ -156,14 +148,27 @@ def main():
 
     le = LabelEncoder()
     cols = [0,2,3,7,8,16]
-    print(features[0])
+    #print(features[0])
     for c in cols:
         features[:,c] = le.fit_transform(features[:,c])
-    print(features[0])
+    #print(features[0])
 
     #ML modeling
     #18 features beyond most and second most common values
     #print(merged_np)
+
+
+def write_to_csv(cols_list, csv_lists):
+    path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'merged.csv'
+    with open(path, 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(cols_list)
+        for c in csv_lists:
+            c[1].sort()
+            c[2].sort()
+            c[1] = replace_multi(str(c[1]), ['[', ']', '\'', ','], '')
+            c[2] = replace_multi(str(c[2]), ['[', ']', '\'', ','], '')
+            writer.writerow(c)
 
 
 if __name__ == '__main__':
