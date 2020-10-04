@@ -11,27 +11,23 @@ def read_file(directory,filename):
     print(filename + ' Dataset Read.')
     return dataset
 
-def main():
-    dataset_first = read_file('datasets', 'Tracking Log [All] #1-10 for NEIU (2).csv')
-    dataset_second = read_file('datasets','dF_all_INFO.csv')
+def clean_up(df):
+    for col in df.columns.values:
+        df[col] = df[col].replace(['Checked'], 1)
+        df[col] = df[col].replace(['Unchecked'], 0)
+        df[col] = df[col].replace(np.NaN, 'None')
 
-    clean_up(dataset_first)
-    clean_up(dataset_second)
-    dataset_first['Record ID (automatically assigned)'] = dataset_first['Record ID (automatically assigned)'].astype(float)
-    dataset_first.rename(columns={'Record ID (automatically assigned)':'record_id'}, inplace=True)
-
-    for index,r in enumerate(dataset_second['household_income'].values):
+def remove_extra_characters(dataset_second):
+    for index, r in enumerate(dataset_second['household_income'].values):
         if '\u81f3' in r:
             s = r.split('\u81f3')
-            #print(s[1])
-            dataset_second['household_income'][index]= str(s[0]) + '-' + str(s[1])
-        elif '<em>' in r:
-            s = r.lstrip('<em')
+            s = str(s[0]) + '-' + str(s[1])
+            if '<em>' in s:
+                s = s.lstrip('<em>')
+                print(s)
             dataset_second['household_income'][index] = s
-    print(dataset_second['household_income'])
 
-    merged_dataset = pd.merge(dataset_first, dataset_second, on='record_id')
-
+def write_to_csv(merged_dataset):
     csv_lists = merged_dataset.values.tolist()
     cols_list = merged_dataset.columns.values.tolist()
     path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'merged_chinatown.csv'
@@ -41,14 +37,24 @@ def main():
         for c in csv_lists:
             writer.writerow(c)
 
+def main():
+    dataset_first = read_file('datasets', 'Tracking Log [All] #1-10 for NEIU (2).csv')
+    dataset_second = read_file('datasets','dF_all_INFO.csv')
 
-def clean_up(df):
-    for col in df.columns.values:
-        df[col] = df[col].replace(['Checked'], 1)
-        df[col] = df[col].replace(['Unchecked'], 0)
-        df[col] = df[col].replace(np.NaN, 'None')
+    clean_up(dataset_first)
+    clean_up(dataset_second)
+    dataset_first['Record ID (automatically assigned)'] = dataset_first['Record ID (automatically assigned)'].astype(float)
+    dataset_first.rename(columns={'Record ID (automatically assigned)':'record_id'}, inplace=True)
 
-    #remove \u81f3 from income range col
+    #Removing <emp> and different language character
+    remove_extra_characters(dataset_second)
+
+    #Merging both chinatown datasets based on record ids
+    merged_dataset = pd.merge(dataset_first, dataset_second, on='record_id')
+
+    #Writing the merged list to a csv file
+    write_to_csv(merged_dataset)
+
 
 if __name__ == '__main__':
     main()
