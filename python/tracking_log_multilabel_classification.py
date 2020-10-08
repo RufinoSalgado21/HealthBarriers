@@ -62,7 +62,6 @@ def replace_multi(string, list=[], replacement=''):
 
 def count_uniques(col, new_df, num_of_most_common):
     length = len(new_df[col])
-
     for n in range(num_of_most_common):
         new_col = col + '_' + str(n)
         new_df[new_col] = ['x'] * length
@@ -77,18 +76,24 @@ def count_uniques(col, new_df, num_of_most_common):
             dct[i] = c
 
         sorted_vals = sorted(dct.items(), key=lambda x: x[1], reverse=True)
+        append_ranked_values(col, index, length, new_df, num_of_most_common, sorted_vals)
+    '''
+        lst = []
+        for k in dct.keys():
+            lst.append(str(k) + '-' + str(dct[k]))
+        new_df[col][index] = lst
+    '''
 
+
+def append_ranked_values(col, index, length, new_df, num_of_most_common, sorted_vals):
+    if num_of_most_common > 0:
         for n in range(num_of_most_common):
             new_col = col + '_' + str(n)
             if len(sorted_vals) > n:
                 new_df[new_col][index] = sorted_vals[n][0]
             else:
-                new_df[new_col][index] = sorted_vals[len(sorted_vals)-1][0]
+                new_df[new_col][index] = sorted_vals[len(sorted_vals) - 1][0]
 
-        lst = []
-        for k in dct.keys():
-            lst.append(str(k) + '-' + str(dct[k]))
-        new_df[col][index] = lst
 
 def main():
     file = 'DuPage_tracking_log.csv'
@@ -109,6 +114,7 @@ def main():
 
     count_uniques('R24Barrier', new_df,2)
     count_uniques('R24Action', new_df, 2)
+    print(new_df['R24Barrier'])
     print('Duplicate values in columns removed.')
 
     #Inner merge two datasets, returning df of items with all features available
@@ -164,10 +170,8 @@ def write_to_csv(cols_list, csv_lists):
         writer = csv.writer(file)
         writer.writerow(cols_list)
         for c in csv_lists:
-            c[1].sort()
-            c[2].sort()
-            c[1] = replace_multi(str(c[1]), ['[', ']', '\'', ','], '')
-            c[2] = replace_multi(str(c[2]), ['[', ']', '\'', ','], '')
+            c[1] = replace_multi(str(c[1]), ['[', ']', '\'', ','], ',')
+            c[2] = replace_multi(str(c[2]), ['[', ']', '\'', ','], ',')
             writer.writerow(c)
 
 
