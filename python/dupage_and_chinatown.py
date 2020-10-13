@@ -5,6 +5,8 @@ from geopy.geocoders import GoogleV3
 import geopy.distance
 import googlemaps
 import numpy as np
+from python import web_scrapper
+from python import distance_calculator
 
 #Reads in a given csv file and passes it to a dataframe instance.
 def read_file(directory,filename):
@@ -88,10 +90,42 @@ def main():
     count_uniques('R24Barrier',joined_frames,3)
     count_uniques('R24Action', joined_frames, 3)
 
+
+    check_for_duplicates(joined_frames,'PDBIRTH')
+    #zipcode = search.main('60641')
+    #print(zipcode)
+    length = len(joined_frames['PDZIP'])
+    joined_frames['Nearest_hospital'] = ['x']*length
+    joined_frames['Km_to_nearest_hospital'] = ['x']*length
+
+    #This section of code iterates throught the zipcodes, searching for the nearest hospitals and calculating their
+    #distance in kilometers. The name of the nearest hospital and the distance to it are entered in two new corresponding columns.
+    '''
+    for index,row in enumerate(joined_frames['PDZIP']):
+        if row is None or row == 'None':
+            joined_frames['Nearest_hospital'][index] = 'None'
+            joined_frames['Km_to_nearest_hospital'][index] = 0
+            continue
+
+        distance = 0
+
+        try:
+            hospital = distance_calculator.find_nearest_hospital(row)
+            zipcode = distance_calculator.find_lat_lng(row)
+            distance = distance_calculator.calculate_distance(zipcode, hospital)
+            joined_frames['Nearest_hospital'][index] = hospital[0]
+            joined_frames['Km_to_nearest_hospital'][index] = distance
+        except:
+            joined_frames['Nearest_hospital'][index] = 'None'
+            joined_frames['Km_to_nearest_hospital'][index] = 0
+            continue
+    '''
+
     cols_list = joined_frames.columns.values.tolist()
     csv_list = joined_frames.values.tolist()
-    write_to_csv(cols_list, csv_list, joined_frames.columns.get_loc('R24Barrier'),joined_frames.columns.get_loc('R24Action'))
-    check_for_duplicates(joined_frames,'PDBIRTH')
+    write_to_csv(cols_list, csv_list, joined_frames.columns.get_loc('R24Barrier'),
+                 joined_frames.columns.get_loc('R24Action'))
+
 
 #Removes duplicated countries from column PDBIRTH due to grammatical errors.
 def clean_PDBIRTH(joined_frames):
