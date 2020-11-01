@@ -1,32 +1,14 @@
 # Importing the geodesic module from the library
 import os
-
+from python import tools
 from geopy.distance import geodesic
 import pandas as pd
 from geopy.geocoders import GoogleV3
 import geopy.distance
 import googlemaps
 from googleplaces import GooglePlaces, types, lang
-'''
-# Loading the lat-long data for Kolkata & Delhi
-kolkata = (22.5726, 88.3639)
-delhi = (28.7041, 77.1025)
 
-# Print the distance calculated in km
-print(geodesic(kolkata, delhi).km)
-
-print(type(geolocator))
-
-name = 'Empire State Building'
-location = geolocator.geocode(name)
-
-print(location.address)
-print(location.latitude, location.longitude)
-'''
-path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'key.txt'
-file = open(path)
-API = file.read()
-file.close()
+API = tools.read_file('files','key.txt')
 
 def find_nearest_hospital(starting_loc):
     print('Searching for nearest hospital...')
@@ -49,7 +31,11 @@ def find_nearest_hospital(starting_loc):
 
     return hospital
 
-
+'''
+Returns the straight distance betwwen 2 given locations
+represented by lists of 2 values, their longitudes and
+lattitudes.
+'''
 def calculate_distance(location_1, location_2):
     print('Calculating distance between points...')
     starting = (location_1[1],location_1[2])
@@ -58,6 +44,7 @@ def calculate_distance(location_1, location_2):
     distance = geodesic(starting,ending).km
     return distance
 
+#Returns latitude and longitude for a given location.
 def find_lat_lng(location):
     print('Returning latitude and longitude of zip code...')
     geolocator = GoogleV3(api_key=API)
@@ -71,7 +58,6 @@ def find_lat_lng(location):
 def main():
     hospital = find_nearest_hospital('60641')
     zipcode = find_lat_lng('60641')
-
     print(calculate_distance(zipcode,hospital),'km')
 
 

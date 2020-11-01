@@ -100,7 +100,7 @@ def main():
 
     #This section of code iterates throught the zipcodes, searching for the nearest hospitals and calculating their
     #distance in kilometers. The name of the nearest hospital and the distance to it are entered in two new corresponding columns.
-    '''
+
     for index,row in enumerate(joined_frames['PDZIP']):
         if row is None or row == 'None':
             joined_frames['Nearest_hospital'][index] = 'None'
@@ -119,7 +119,11 @@ def main():
             joined_frames['Nearest_hospital'][index] = 'None'
             joined_frames['Km_to_nearest_hospital'][index] = 0
             continue
-    '''
+
+    X = joined_frames[['PDAGE', 'Km_to_nearest_hospital']]
+    for col in X.columns.values:
+        X[col] = X[col].replace('None', '0')
+    X['PDAGE'] = X['PDAGE'].astype('float')
 
     cols_list = joined_frames.columns.values.tolist()
     csv_list = joined_frames.values.tolist()

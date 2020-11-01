@@ -99,10 +99,12 @@ def merge_barriers(merged_dataset):
 def main():
     dataset_first = read_file('datasets', 'Tracking Log [All] #1-10 for NEIU (2).csv')
     dataset_second = read_file('datasets','dF_all_INFO.csv')
-
+    print(dataset_first['Record ID (automatically assigned)'])
     clean_up(dataset_first)
     clean_up(dataset_second)
+    print(dataset_first['Record ID (automatically assigned)'])
     dataset_first['Record ID (automatically assigned)'] = dataset_first['Record ID (automatically assigned)'].astype(float)
+    print(dataset_first['Record ID (automatically assigned)'])
     dataset_first.rename(columns={'Record ID (automatically assigned)':'record_id'}, inplace=True)
 
     #Removing <emp> and different language character
