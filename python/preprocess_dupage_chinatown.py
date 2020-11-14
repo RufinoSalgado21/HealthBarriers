@@ -10,9 +10,37 @@ def preprocess(df_dupage,df_chinatown):
 
     tools.count_visits(merged_dataset)
 
-    for index, col in enumerate(merged_dataset['R24Barrier'].values):
-        count = Counter(id.split(','))
-        
+    barriers = ['barrier_1','barrier_2','barrier_3']
+    col_len = len(merged_dataset['IDSUBJ'])
+    print(col_len)
+    tools.create_empty_column(merged_dataset, barriers[0], col_len)
+    tools.create_empty_column(merged_dataset, barriers[1], col_len)
+    tools.create_empty_column(merged_dataset, barriers[2], col_len)
+
+    actions = ['action_1','action_2','action_3']
+    tools.create_empty_column(merged_dataset, actions[0], col_len)
+    tools.create_empty_column(merged_dataset, actions[1], col_len)
+    tools.create_empty_column(merged_dataset, actions[2], col_len)
+
+    for index, row in enumerate(merged_dataset['R24Barrier'].values):
+        count = Counter(row.split(','))
+        c = {k: v for k, v in sorted(count.items(), key=lambda item: item[1])}
+        lst = list(c.keys())
+        for i, bar in enumerate(barriers):
+            l = len(lst)-1-i
+            if l < 0:
+                l = 0
+            merged_dataset[bar][index] = lst[l]
+
+    for index, row in enumerate(merged_dataset['R24Action'].values):
+        count = Counter(row.split(','))
+        c = {k: v for k, v in sorted(count.items(), key=lambda item: item[1])}
+        lst = list(c.keys())
+        for i, act in enumerate(actions):
+            l = len(lst)-1-i
+            if l < 0:
+                l = 0
+            merged_dataset[act][index] = lst[l]
 
     cols_list = merged_dataset.columns.values
     csv_list = merged_dataset.values
