@@ -48,6 +48,7 @@ def preprocess_chinatown(demographics_file,log_file):
 def replace_barrier_names(df):
     for index, r in enumerate(df['R24Barrier']):
         r = r.replace('Language/interpreter', 'LI1')
+        r = r.replace('Literacy', 'L1')
         r = r.replace('Fear', 'F1')
         r = r.replace('Citizenship','CC1')
         r = r.replace('Family/community issues', 'FC1')
@@ -74,7 +75,9 @@ def replace_action_names(df):
         r = r.replace('Support', 'S1')
         r = r.replace('Arrangements', 'AR1')
         r = r.replace('Records/Recordkeeping', 'R1')
-        r = r.replace('Action pending / No action', 'Pending')
+        r = r.replace('Action pending / No action', 'Other')
+        r = r.replace('Action Other', 'Other')
+        r = r.replace('Pending', 'Other')
         df['R24Action'][index] = r
 
 def encode_features(df):
@@ -112,12 +115,16 @@ def encode_features(df):
             df[col] = df[col].replace(['Do Not Know'], 98)
             df[col] = df[col].replace(["$50,000 - $74,999"], 6)
             df[col] = df[col].replace(["$75,000 - $99,999"], 6)
+        '''
         elif col == 'PDEMP':
             df[col] = df[col].replace(['Working'],98)
             df[col] = df[col].replace(['Retired'],0)
             df[col] = df[col].replace(['Housewife'],0)
+            df[col] = df[col].replace(['Student'],0)
+            df[col] = df[col].replace(['Other'], 0)
             df[col] = df[col].replace(['Unemployed'], 0)
-
+            #Housewife, Working, Retired, Unemployed, Other, Student
+        '''
 def remove_nonenglish_characters(df):
     for index, r in enumerate(df['PDINCOME'].values):
         if '\u81f3' in r:
@@ -147,7 +154,3 @@ def encode_PDLANG(df):
     df['PDLANG'] = df['PDLANG'].replace(['Toishanese'], 'Other')
     for l in lang_codes:
         df['PDLANG'] = df['PDLANG'].replace([l], lang_codes.index(l) + 1)
-
-
-#if __name__ == '__main__':
-    #preprocess_chinatown('df_all_INFO.csv','Tracking Log [All] #1-10 for NEIU (2).csv')

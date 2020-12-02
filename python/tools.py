@@ -1,10 +1,11 @@
 import csv
 from collections import Counter
-
 import pandas as pd
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+from sklearn.preprocessing import MultiLabelBinarizer
+
 
 def create_empty_column(df,name,length):
     df[name] = [' ']*length
@@ -20,6 +21,105 @@ def write_to_txt_file(df, filename):
     file1.write(str(df.columns.values) + '\n')
     file1.write(str(df))
     file1.close()
+
+
+'''
+    Takes the given prediction numpy arrays and convert
+    each predicted instance to zeroes except for the top three
+    highest scoring, labeled as ones.
+'''
+
+def convert_to_binary(yhat, ytest):
+   for index,row in enumerate(yhat):
+       ones = np.count_nonzero(ytest[index])
+       ind = np.argpartition(row, -ones)[-ones:]
+
+       for i in range(len(row)):
+           if i in ind:
+               row[i] = 1
+           else:
+               row[i] = 0
+
+'''
+    Return a list with the top three labels based on the returned list from
+    convert_to_prediction() which labels the top three predictions as 1, else 
+    as 0.
+'''
+def return_predicted_labels(y, labels):
+    output = []
+    for index, row in enumerate(y):
+        indices = [i for i in range(len(row)) if row[i] == 1] #Return list of labels predicted/true
+        predictions = [ labels[j] for j in indices ]
+        output.append(predictions)
+    return output
+
+def convert_column_to_float(X,column_list):
+    for col in column_list:
+        X[col] = X[col].replace('None', 0)
+        X[col] = X[col].astype('float')
+
+def my_filter(shape, dtype=None):
+    kernel = np.zeros(shape)
+    lst = [0]*shape[0]
+    kernel[:,0, 0] = np.array([[1,0,1]])
+    return kernel
+
+'''
+    Used by prediction methods to encode the most common labels
+    represented by separate columns in a dataframe.
+    Returns a new dataframe of of encoded labels with unique label
+    names across the given column names listed.
+    e.g. 
+    input
+    df[label1] : a, df[label2]: b, df[label3]: c
+    output
+    df[a, b, c] : [[1, 0, 0],[0, 1, 0],[0,0,1]]
+'''
+def multilabel_binary_label_encoding(df, labels):
+    # Joined top three barriers into single column
+    df['total_barriers'] = df[labels].apply(','.join, axis=1)
+
+    # Split the three values in each row into a list for binarization
+    for index, i in enumerate(df['total_barriers'].values):
+        df['total_barriers'][index] = i.split(',')
+
+    # MultiLabelBinarizer allows the binarization of multilabel values
+    # Necessary to include all barriers listed by at least one patient without duplicating barriers
+    mlb = MultiLabelBinarizer()
+    pand = mlb.fit_transform(df['total_barriers'].values)
+
+    temp_frame = pd.DataFrame(data=pand, columns=mlb.classes_)
+    return mlb, temp_frame
+
+def select_multilabels(df, labels):
+    mlb, temp_frame = multilabel_binary_label_encoding(df, labels)
+    Y = temp_frame.values
+    return Y, mlb
+
+'''
+    Writes to output file the accuracy, precision, recall, and F1 Score for 
+    the given confusion matrix as a string.
+'''
+def calculate_confusion_matrix_measures(confusion_matrices):
+    trueN = confusion_matrices[0][0]
+    trueP = confusion_matrices[1][1]
+    falseP = confusion_matrices[0][1]
+    falseN = confusion_matrices[1][0]
+    acc = (trueP + trueN) / (trueP + falseP + trueN + falseN)
+    if trueP == 0 and falseP == 0:
+        prec = 0
+    else:
+        prec = trueP / (trueP + falseP)
+    if trueP == 0 and falseN == 0:
+        rec = 0
+    else:
+        rec = trueP / (trueP + falseN)
+    if prec == 0 and rec == 0:
+        f = 0
+    else:
+        f = 2 * (prec * rec) / (prec + rec)
+    output = [acc,prec,rec,f]
+    return output
 
 #Replace NULL and NaN values with None
 def replace_null_values(df):
@@ -95,7 +195,6 @@ def encode_PDBIRTH(df):
 
 def read_file(directory, filename):
     path = os.environ['PYTHONPATH'] + os.path.sep + directory + os.path.sep + filename
-    # pd.set_option('display.max_rows', None)
     pd.set_option('display.max_columns', None)
     dataset = pd.read_csv(path)
     print(filename + ' Dataset Read.')
