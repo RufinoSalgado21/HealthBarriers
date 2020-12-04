@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 from sklearn import svm, metrics
 from sklearn.metrics import r2_score, accuracy_score, f1_score, confusion_matrix
@@ -205,7 +207,7 @@ def evaluate_visits_models(directory, filename):
     Y = df[labels[0]].values
     n_inputs = X.shape[1]
 
-    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.7, shuffle=True)
+    x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=.2, shuffle=True)
 
     cls = svm.SVC(kernel='linear',C=1).fit(x_train, y_train)
     lin = svm.LinearSVC(C=1, max_iter=1000).fit(x_train, y_train)
@@ -219,37 +221,56 @@ def evaluate_visits_models(directory, filename):
 
     cls_accuracy = accuracy_score(Y, cls_pred)
     cls_f1 = f1_score(Y, cls_pred, average='weighted')
-    print('Accuracy (Linear Kernel): ', "%.2f" % (cls_accuracy * 100))
-    print('F1 (Linear Kernel): ', "%.2f" % (cls_f1 * 100))
+    #print('Accuracy (Linear Kernel): ', "%.2f" % (cls_accuracy * 100))
+    #print('F1 (Linear Kernel): ', "%.2f" % (cls_f1 * 100))
 
     lin_accuracy = accuracy_score(Y, lin_pred)
     lin_f1 = f1_score(Y, lin_pred, average='weighted')
-    print('Accuracy (Linear Kernel): ', "%.2f" % (lin_accuracy * 100))
-    print('F1 (Linear Kernel): ', "%.2f" % (lin_f1 * 100))
+    #print('Accuracy (Linear Kernel): ', "%.2f" % (lin_accuracy * 100))
+    #print('F1 (Linear Kernel): ', "%.2f" % (lin_f1 * 100))
 
     poly_accuracy = accuracy_score(Y, poly_pred)
     poly_f1 = f1_score(Y, poly_pred, average='weighted')
-    print('Accuracy (Polynomial Kernel): ', "%.2f" % (poly_accuracy * 100))
-    print('F1 (Polynomial Kernel): ', "%.2f" % (poly_f1 * 100))
+    #print('Accuracy (Polynomial Kernel): ', "%.2f" % (poly_accuracy * 100))
+    #print('F1 (Polynomial Kernel): ', "%.2f" % (poly_f1 * 100))
 
     rbf_accuracy = accuracy_score(Y, rbf_pred)
     rbf_f1 = f1_score(Y, rbf_pred, average='weighted')
-    print('Accuracy (RBF Kernel): ', "%.2f" % (rbf_accuracy * 100))
-    print('F1 (RBF Kernel): ', "%.2f" % (rbf_f1 * 100))
+    #print('Accuracy (RBF Kernel): ', "%.2f" % (rbf_accuracy * 100))
+    #print('F1 (RBF Kernel): ', "%.2f" % (rbf_f1 * 100))
 
-    # accuracy
-    print("acuracy:", metrics.accuracy_score(Y, y_pred=cls_pred))
+    ## accuracy
+    #print("acuracy:", metrics.accuracy_score(Y, y_pred=rbf_pred))
     # precision score
-    print("precision:", metrics.precision_score(Y, y_pred=cls_pred,average=None,labels=['L','M','H','VH']))
+    #print("precision:", metrics.precision_score(Y, y_pred=rbf_pred,average=None,labels=['L','M','H','VH']))
     # recall score
-    print("recall", metrics.recall_score(Y, y_pred=cls_pred,average=None,labels=['L','M','H','VH']))
-    print(metrics.classification_report(Y, y_pred=cls_pred,labels=['L','M','H','VH']))
+    #print("recall", metrics.recall_score(Y, y_pred=rbf_pred,average=None,labels=['L','M','H','VH']))
+    metric_dict = metrics.classification_report(Y, y_pred=rbf_pred,labels=['L','M','H','VH'], output_dict=True)
+    pth = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'rbfmetrics.csv'
+    rbfmetrics = pd.DataFrame(metric_dict)
+    rbfmetrics['metrics'] = ['Precision','Recall','F1 Score','Support']
+    rbfmetrics.to_csv(path_or_buf=pth)
+
 
     # creating a confusion matrix
-    print(confusion_matrix(Y, cls_pred, labels=['L','M','H','VH']))
-    print(confusion_matrix(Y, lin_pred, labels=['L','M','H','VH']))
-    print(confusion_matrix(Y, poly_pred, labels=['L','M','H','VH']))
-    print(confusion_matrix(Y, rbf_pred, labels=['L','M','H','VH']))
+    #print(confusion_matrix(Y, cls_pred, labels=['L','M','H','VH']))
+    linearsvc_con =confusion_matrix(Y, lin_pred, labels=['L','M','H','VH'])
+    poly_con = confusion_matrix(Y, poly_pred, labels=['L', 'M', 'H', 'VH'])
+    rbf_con = confusion_matrix(Y, rbf_pred, labels=['L', 'M', 'H', 'VH'])
+
+    linearsvc_df =  pd.DataFrame(linearsvc_con, columns=['linsvc_L','linsvc_M','linsvc_H','linsvc_VH'])
+    linearsvc_df['ranges'] = ['L','M','H','VH']
+    poly_df = pd.DataFrame(poly_con, columns=['poly_L','poly_M','poly_H','poly_VH'])
+    poly_df['ranges'] = ['L', 'M', 'H', 'VH']
+    rbf_df = pd.DataFrame(rbf_con, columns=['rbf_L','rbf_M','rbf_H','rbf_VH'])
+    rbf_df['ranges'] = ['L', 'M', 'H', 'VH']
+    joined_df = pd.merge(rbf_df, poly_df, on='ranges')
+    joined_df = pd.merge(joined_df, linearsvc_df, on='ranges')
+    joined_df.set_index('ranges', inplace=True)
+    joined_df['classes'] = ['L','M','H','VH']
+    print(joined_df)
+    pth = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'visitmetrics.csv'
+    joined_df.to_csv(path_or_buf=pth)
 
 def test():
     evaluate_visits_models('files', 'dupage_chinatown.csv')
@@ -263,6 +284,9 @@ def predict(x):
 
 if __name__ == '__main__':
     #x = [24, 3, 'spanish', '60613', 'us', 'single', 'graduate', 40000, 'full time employment']
+    '''
     x = encode_input(24, 4, 'english', '60613', 'us', 'divorced/separated', 'graduate/professional degree', 40000, 'working')
     pred = predict(x)
     print(pred)
+    '''
+    test()

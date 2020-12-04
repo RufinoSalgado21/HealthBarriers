@@ -65,6 +65,10 @@ def replace_action_names(df):
         r = r.replace('Action Other', 'Other')
         r = r.replace('Action Pending', 'Other')
         r = r.replace('Travel', 'Other')
+        r = r.replace('AR10', 'Other')
+        r = r.replace('AR9', 'Other')
+        r = r.replace('PN5', 'Other')
+        r = r.replace('PN6', 'Other')
         df['R24Action'][index] = r
 
 def replace_barrier_names(df):
@@ -86,6 +90,7 @@ def replace_barrier_names(df):
         r = r.replace('PB6', 'Other')
         r = r.replace('PN6', 'Other')
         r = r.replace('RD2', 'Other')
+        r = r.replace('RD7', 'Other')
         r = r.replace('SA1', 'Other')
         r = r.replace('SS9', 'Other')
         r = r.replace('RD2', 'Other')

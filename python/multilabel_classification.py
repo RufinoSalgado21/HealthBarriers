@@ -64,7 +64,9 @@ def select_features(df):
     for e in encodings:
         for col in e.columns.values:
             X[col] = e[col]
-    print(X.columns.values)
+    csv_path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'X.csv'
+    print(X)
+    datax = pd.DataFrame(X).to_csv(path_or_buf=csv_path)
     return X
 
 # get the model
@@ -90,6 +92,7 @@ def eval_barriers(directory, filename):
 
     Y, mlb = tools.select_multilabels(df, labels)
     X = select_features(df).values
+
     '''
     x_scalar = StandardScaler()
     X[:, 0:3] = x_scalar.fit_transform(X[:, 0:3])
@@ -105,6 +108,9 @@ def eval_actions(directory, filename):
 
     Y, mlb = tools.select_multilabels(df, labels)
     X = select_features(df).values
+
+    csv_path2 = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'y.csv'
+    datay = pd.DataFrame(Y, columns=mlb.classes_).to_csv(path_or_buf=csv_path2)
     '''
     #Scaling should only be applied to non-encoded values
     x_scalar = StandardScaler()
@@ -117,11 +123,6 @@ def eval_actions(directory, filename):
 def evaluate_model(X, y, classes,output_filename, metrics_filename):
     n_inputs, n_outputs = X.shape[1], y.shape[1]
     model = get_model(n_inputs, n_outputs)
-    #prediction_metrics = {}
-
-    #confusion_matrices = np.zeros((2,2))
-    #path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + output_filename
-    #output = open(path, 'w')
 
     # define evaluation procedure
     cv = RepeatedKFold(n_splits=10, n_repeats=3, random_state=101)
@@ -133,7 +134,6 @@ def evaluate_model(X, y, classes,output_filename, metrics_filename):
     # enumerate folds
     for train_ix, test_ix in cv.split(X):
         count += 1
-        #output.write('\nFold: ' + str(count) + '\n')
 
         # prepare data
         X_train, X_test = X[train_ix], X[test_ix]
@@ -171,43 +171,25 @@ def evaluate_model(X, y, classes,output_filename, metrics_filename):
         con_frame['predicted'] = predicted
         con_frame.set_index(['classes', 'expected', 'predicted'], inplace=True)
 
-        #output.write(str(con_frame) + '\n')
         #Determine cases for each class misclassified and as what
         csv_path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + output_filename
         data = con_frame.to_csv(path_or_buf=csv_path)
 
-        '''
-        print(con_frame.index)
-        for ind in con_frame.index:
-            print(ind[0])
-            print('expected', ind[1], 'predicted', ind[2])
-            for col in con_frame.columns:
-                if ind[0] != col:
-                    classifications = con_frame[col][ind]
-                    if classifications == 0:
-                        continue
-                    print('misclassified',ind[0],'as',col,':',con_frame[col][ind])
-        '''
         #Calculate and store accuracy, precision, recall, and F1 scores for this fold to dictionary.
         #Output the average values from all folds as a csv file
         for lab in all_labels:
             confusion = calculate_positive_negatives(classes, lab, num_of_patients,
                                                  y_test, yhat, yhat_labels, ytest_labels)
-            #output.write('\tAccuracy' + '\tPrecision' + '\tRecall' + '\tF1Score' + '\n')
-            results = tools.calculate_confusion_matrix_measures(confusion)
-            #results[0] = lab
-            measures[lab] = np.divide(np.add(measures[lab],results), 2)
-            #print(measures[lab])
-            #output.write(lab + str(results) + '\n')
 
-        #output.write('*********************************************************')
+            results = tools.calculate_confusion_matrix_measures(confusion)
+            measures[lab] = np.divide(np.add(measures[lab],results), 2)
+
     measures_df = pd.DataFrame(measures)#, columns=['Class', 'Precision', 'Recall', 'F1 Score'])
     measures_df['Metrics'] = ['Accuracy','Precision','Recall','F1 Score']
     measures_df.set_index(['Metrics'],inplace=True)
-    print(measures_df)
     measure_path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + metrics_filename
     measures_df.to_csv(path_or_buf=measure_path)
-    #output.close()
+
 
 def main():
 

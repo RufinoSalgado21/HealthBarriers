@@ -53,41 +53,146 @@ def feature_correlations():
     new_df.to_csv(path_or_buf=path)
     #doc.close()
 
+def feature_actions_correlations():
+    df = tools.read_file('files', 'dupage_chinatown.csv')
+    df_features = multilabel_classification.select_features(df)
+    feature_cols = df_features.columns
+
+    labels = ['action_1', 'action_2', 'action_3']
+    Y, mlb = tools.select_multilabels(df, labels)
+    df_actions = pd.DataFrame(Y,columns=mlb.classes_)
+    action_cols = mlb.classes_
+
+    length = len(df_actions)
+    ind = range(length)
+    df_features['ind'] = ind
+    df_actions['ind'] = ind
+    merged = pd.merge(df_features,df_actions,on='ind')
+    merged.set_index('ind', inplace=True)
+    print(merged)
+
+    # Calculate correlations between all features
+    corr = merged.corr()
+    print(corr)
+
+    #Return a list with the given feature, the highest correlation with another feature, and that feature.
+
+    path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'feature_action_correlations.csv'
+    #doc = open(os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'correlations.txt','w')
+    lst = []
+    for c in action_cols:
+        corrs = find_strongest_correlations(c, feature_cols, corr)
+        lst.append(corrs)
+        #doc.write(str(corrs) + '\n')
+    new_df = pd.DataFrame(lst,columns=['Actions','Most Positive Correlation','Most Positive Correlation-Feature','Most Negative Correlation','Most Negative Correlation-Feature'])
+    print(new_df['Actions'].values)
+    decode_features(new_df,columns=['Most Positive Correlation-Feature','Most Negative Correlation-Feature'])
+    decode_classes(new_df, classes='actions',columns=['Actions'])
+    new_df.to_csv(path_or_buf=path)
+    #doc.close()
+
 #
 def feature_barriers_correlations():
     df = tools.read_file('files', 'dupage_chinatown.csv')
     df_features = multilabel_classification.select_features(df)
+    feature_cols = df_features.columns
+
     labels = ['barrier_1', 'barrier_2', 'barrier_3']
     Y, mlb = tools.select_multilabels(df, labels)
     df_barriers = pd.DataFrame(Y,columns=mlb.classes_)
-    print(df_barriers)
-    cols = df_features.columns.values
+    barrier_cols = mlb.classes_
+
+    length = len(df_barriers)
+    ind = range(length)
+    df_features['ind'] = ind
+    df_barriers['ind'] = ind
+    merged = pd.merge(df_features,df_barriers,on='ind')
+    merged.set_index('ind', inplace=True)
+    print(merged)
 
     # Calculate correlations between all features
-    corr = df_features.corr()
+    corr = merged.corr()
+    print(corr)
 
     #Return a list with the given feature, the highest correlation with another feature, and that feature.
-    col_name = 'visit_counts'
-    path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'feature_correlations.csv'
+
+    path = os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'feature_barrier_correlations.csv'
     #doc = open(os.environ['PYTHONPATH'] + os.path.sep + 'files' + os.path.sep + 'correlations.txt','w')
     lst = []
-    for c in cols:
-        corrs = find_strongest_correlations(c, cols, corr)
+    for c in barrier_cols:
+        corrs = find_strongest_correlations(c, feature_cols, corr)
         lst.append(corrs)
         #doc.write(str(corrs) + '\n')
-    new_df = pd.DataFrame(lst,columns=['Feature','Most Positive Correlation','Most Positive Correlation-Feature','Most Negative Correlation','Most Negative Correlation-Feature'])
-    print(new_df['Feature'])
-    decode_features(new_df,columns=['Feature','Most Positive Correlation-Feature','Most Negative Correlation-Feature'])
-
-
+    new_df = pd.DataFrame(lst,columns=['Barrier','Most Positive Correlation','Most Positive Correlation-Feature','Most Negative Correlation','Most Negative Correlation-Feature'])
+    print(new_df['Barrier'].values)
+    decode_features(new_df,columns=['Most Positive Correlation-Feature','Most Negative Correlation-Feature'])
+    decode_classes(new_df,classes='barriers',columns=['Barrier'])
     new_df.to_csv(path_or_buf=path)
     #doc.close()
+
+def decode_classes(df, classes='None',columns=[]):
+    barrier_conversions = {'CC1':' Unaware of Eligibility', 'CC3':'Believes They are Ineligible',
+                   'CM':'Case Management','CP1':' Does not understand cancer',
+                   'CP2':' Does not understand testing','CP4':'Does not understand instructions',
+                   'CP5':'Does not understand forms','F1':'Fear of Unknown Results',
+                   'F2':'Fear of Testing','F3':'Fear of Treatment','FC1':'Cannot find eldercare',
+                   'FP1':'Cannot afford housing','FP2':'Cannot afford food',
+                   'FP3':'Cannot afford utilities','FP4':'Cannot afford clothing',
+                   'H1':'Homeless','H2':'Inconsistent housing','I1':'None',
+                   'I2':'Expensive copay/deductable','I3':'Insufficient discounts/payment plan',
+                   'I5':'Anxious of bills','I6':'Overwhelmed by paperwork',
+                   'I7':'Misunderstands coverage','L1':'Illiterate/Low literacy/Learning disability',
+                   'L2':'Does not understand medical terminology','LI1':'Uncomfortable with English',
+                   'LI2':'Staff do not speak native language','MM1':'Comorbidities',
+                   'MM3':'Testing painful','MM4':'Side effects',
+                   'MM5':'Stress','MM6':'Depressed/Unmotivated',
+                   'MM7':'Mental illness','MM8':'Substance abuse',
+                   'NB1':'Navigator Barrier 1', 'NB4':'Navigator Barrier 4','NB5':'Navigator Barrier 5',
+                   'None':'No Barrier','O1':'Out of country/region','Other':'Other/No relevant tag',
+                   'PB1':'Beliefs:Results irrelevant/Trust higher power','RD7':'RD7','SP1':'No near family support',
+                   'SP3':'No reliable friends support','SP4':'Abusive/Violent home','SS1':'No phone/Disconnected',
+                   'SS2':'Difficulties during phone call', 'SS6':'Inconvenient hours','T1':'Lack of public transportation',
+                   'T2':'Fare/Fuel unaffordable','T3':'No available drivers','W1':'Concerns of losing job/benefits'}
+    action_conversions = {'AC1':'To health service','AC2':'To other service',
+                          'AR1':'Transporation','AR2':'Interpreter',
+                          'AR5':'Financial assistance','AR8':'Public assistance program enrollment',
+                          'E1':'Verbal explanation','E3':'Print/Audio-Visual material',
+                          'E4':'Translation for patient','None':'No intervention taken/needed','Other':'Other intervention/No relevant code',
+                          'PN1':'Verification/Information gathering','PN3':'Educate staff of patient special needs',
+                          'R1':'Aid in paperwork completion',
+                          'R2':'Request/Organize health records','R3':'Provide documents to providers',
+                          'R4':'Consent/Exit patient','RD1':'Call patient',
+                          'RD2':'Referral for social services agency','RD3':'Referral for health care',
+                          'RD4':'Contact social service agency','RD5':'Contact family',
+                          'RD6':'Contact other support systems','RD7':'Contact health care providers',
+                          'S1':'Emotional support/Active listening','S2':'Motivational counseling',
+                          'SA1':'Schedule/Reschedule appointments','SA2':'Contact patient/Reminder',
+                          'SA3':'Mail letter to patient'}
+    if classes == 'None':
+        return
+    elif classes == 'barriers':
+        if len(columns) == 0:
+            print('No Columns to Decode Given')
+            return
+        for col in columns:
+            for index, c in enumerate(df[col].values):
+                if c in barrier_conversions.keys():
+                    df.at[index,col] = barrier_conversions[c]
+    elif classes == 'actions':
+        if len(columns) == 0:
+            print('No Columns to Decode Given')
+            return
+        for col in columns:
+            for index, c in enumerate(df[col].values):
+                if c in action_conversions.keys():
+                    df.at[index,col] = action_conversions[c]
+
 
 def decode_features(df,columns=[]):
     if len(columns) == 0:
         print('No Columns to Decode Given')
         return
-    lst = {
+    conversions = {
         'PDAGE': 'Age', 'visit_counts': 'Visits', 'PDHSIZE': 'Household Size', 'PDLANG_1': 'English Primary Language',
         'PDLANG_10': 'Other Primary Language', 'PDLANG_2': 'Spanish Primary Language',
         'PDLANG_6': 'Albanian Primary Language', 'PDLANG_None': 'Primary Language Not Chosen',
@@ -107,23 +212,23 @@ def decode_features(df,columns=[]):
         'PDZIP_60605': '60605', 'PDZIP_60607': '60607', 'PDZIP_60608': '60608',
         'PDZIP_60609': '60609', 'PDZIP_60616': '60616', 'PDZIP_60632': '60632',
         'PDZIP_60635': '60635', 'PDZIP_60660': '60660', 'PDZIP_None': 'Zipcode Not Given',
-        'PDBIRTH_AF': 'Birth Country: Afghanistan ', 'PDBIRTH_AL': 'Birth Country: Albania',
-        'PDBIRTH_AO': 'Birth Country: Angola', 'PDBIRTH_AR': 'Birth Country: Argentina',
-        'PDBIRTH_BD': 'Birth Country: Bangladesh', 'PDBIRTH_BO': 'Bolivia',
-        'PDBIRTH_CL': 'Birth Country: Chile', 'PDBIRTH_CN': 'Birth Country: China',
-        'PDBIRTH_CO': 'Birth Country: Columbia', 'PDBIRTH_CU': 'Birth Country: Cuba',
-        'PDBIRTH_DE': 'Birth Country: Germany', 'PDBIRTH_EC': 'Birth Country: Ecuador',
-        'PDBIRTH_GR': 'Birth Country: Greece', 'PDBIRTH_GT': 'Birth Country: Guatemala',
-        'PDBIRTH_HN': 'Birth Country: Honduras', 'PDBIRTH_IN': 'Birth Country: India',
-        'PDBIRTH_IR': 'Birth Country: Iran', 'PDBIRTH_IT': 'Birth Country: Italy',
-        'PDBIRTH_JM': 'Birth Country: Jamaica', 'PDBIRTH_JO': 'Birth Country: Jordan',
-        'PDBIRTH_LB': 'Birth Country: Lebanon', 'PDBIRTH_LT': 'Birth Country: Lithuania',
-        'PDBIRTH_MX': 'Birth Country: Mexico', 'PDBIRTH_None': 'Birth Country: Not Given',
-        'PDBIRTH_PE': 'Birth Country: Peru', 'PDBIRTH_PH': 'Birth Country: Philippines',
-        'PDBIRTH_PL': 'Birth Country: Poland', 'PDBIRTH_PR': 'Birth Country: Puerto Rico',
-        'PDBIRTH_RU': 'Birth Country: Russia', 'PDBIRTH_SD': 'Birth Country: Sudan',
-        'PDBIRTH_SV': 'Birth Country: El Salvador', 'PDBIRTH_UK': 'Birth Country: United Kingdom',
-        'PDBIRTH_US': 'Birth Country: USA', 'PDBIRTH_VN': 'Birth Country: Vietnam',
+        'PDBIRTH_AF': 'Afghanistan ', 'PDBIRTH_AL': 'Albania',
+        'PDBIRTH_AO': 'Angola', 'PDBIRTH_AR': 'Argentina',
+        'PDBIRTH_BD': 'Bangladesh', 'PDBIRTH_BO': 'Bolivia',
+        'PDBIRTH_CL': 'Chile', 'PDBIRTH_CN': 'China',
+        'PDBIRTH_CO': 'Columbia', 'PDBIRTH_CU': 'Cuba',
+        'PDBIRTH_DE': 'Germany', 'PDBIRTH_EC': 'Ecuador',
+        'PDBIRTH_GR': 'Greece', 'PDBIRTH_GT': 'Guatemala',
+        'PDBIRTH_HN': 'Honduras', 'PDBIRTH_IN': 'India',
+        'PDBIRTH_IR': 'Iran', 'PDBIRTH_IT': 'Italy',
+        'PDBIRTH_JM': 'Jamaica', 'PDBIRTH_JO': 'Jordan',
+        'PDBIRTH_LB': 'Lebanon', 'PDBIRTH_LT': 'Lithuania',
+        'PDBIRTH_MX': 'Mexico', 'PDBIRTH_None': 'Not Given',
+        'PDBIRTH_PE': 'Peru', 'PDBIRTH_PH': 'Philippines',
+        'PDBIRTH_PL': 'Poland', 'PDBIRTH_PR': 'Puerto Rico',
+        'PDBIRTH_RU': 'Russia', 'PDBIRTH_SD': 'Sudan',
+        'PDBIRTH_SV': 'El Salvador', 'PDBIRTH_UK': 'United Kingdom',
+        'PDBIRTH_US': 'USA', 'PDBIRTH_VN': 'Vietnam',
         'Mstat_1': 'Single/Never Married', 'Mstat_2': 'Married/Living as Married',
         'Mstat_3': 'Divorced/Separated', 'Mstat_4': 'Widowed', 'Mstat_98': 'Marital Status Not Given',
         'Edu_1': '8th Grade or Less', 'Edu_2': 'Some High School', 'Edu_3': 'High School Diploma/Equivalent',
@@ -138,14 +243,14 @@ def decode_features(df,columns=[]):
         'Emp_Working': 'Employment: Working'}
     for col in columns:
         for index, c in enumerate(df[col].values):
-            df.at[index,col] = lst[c]
+            df.at[index,col] = conversions[c]
 
 
 def find_strongest_correlations(col_name, cols, corr):
     corrs = []
     m = -1
     j = 0
-    vals = corr[col_name].values
+    vals = corr[col_name][cols].values
     corrs.append(col_name)
 
     #Find max correlation and corresponding feature and append values to the output list.
@@ -169,5 +274,6 @@ def find_strongest_correlations(col_name, cols, corr):
     return corrs
 
 if __name__ == '__main__':
-    #feature_correlations()
+    feature_correlations()
     feature_barriers_correlations()
+    feature_actions_correlations()

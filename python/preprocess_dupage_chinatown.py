@@ -86,10 +86,6 @@ def preprocess(df_dupage,df_chinatown):
     csv_list = merged_dataset.values
     tools.write_to_csv(cols_list,csv_list,'files','dupage_chinatown.csv')
 
-    for feature in cols_list:
-        print(feature)
-        print(np.unique(merged_dataset[feature].values.astype(str)))
-
     return merged_dataset
 
 

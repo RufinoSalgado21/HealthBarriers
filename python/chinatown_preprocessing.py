@@ -25,7 +25,7 @@ def preprocess_chinatown(demographics_file,log_file):
     #encode_PDLANG(chinatown_logs)
     remove_nonenglish_characters(merged_dataset)
     encode_features(merged_dataset)
-
+    #17
     barriers =[]
     for col in merged_dataset.columns:
         if 'Barrier (choose one)' in col:
@@ -37,6 +37,23 @@ def preprocess_chinatown(demographics_file,log_file):
         if 'Action taken (choose one)' in col:
             actions.append(col)
     merged_dataset['R24Action'] = merged_dataset[actions[:]].agg(','.join, axis=1)
+
+    for num in range(len(merged_dataset['R24Barrier'])):
+        nones = 0
+        for col in merged_dataset.columns:
+            if 'Date of service' in col:
+                if merged_dataset.at[num,col] == 'None':
+                    nones += 1
+        for n in range(nones):
+            temp = merged_dataset['R24Barrier'][num]
+            if 'None' in temp:
+                temp = temp.replace(',None','')
+            merged_dataset.at[num, 'R24Barrier'] = temp
+        for n in range(nones):
+            temp = merged_dataset['R24Action'][num]
+            if 'None' in temp:
+                temp = temp.replace(',None','')
+            merged_dataset.at[num, 'R24Action'] = temp
 
     replace_barrier_names(merged_dataset)
     replace_action_names(merged_dataset)
