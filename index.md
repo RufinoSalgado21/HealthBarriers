@@ -9,4 +9,15 @@ Datasets were provided by Northwestern researchers and healthcare providers. Fou
 
 Datasets for each location had to be merged according to patient ID's to ensure each patient would have a complete set of data to analyze. In total, 674 complete sets of patient data. 
 
-In order to merge all datasets into one consolidated set, data had to be reformated for each feature to have consistent values. Lists of three most frequent barriers encountered by each patient were created as validation data for model training. The same was done for actions taken by healthcare providers. The number of individual visits recorded per patient 
+In order to merge all datasets into one consolidated set, data had to be reformated for each feature to have consistent values. To extract further features from existing data, the Google Maps API was used with patients' zip code information to determine nearest hospitals, distance to those hospitals, and predicted travel times. Lists of three most frequent barriers encountered by each patient were created as validation data for model training. The same was done for actions taken by healthcare providers. The number of individual visits recorded per patient were also counted as validation data for multiclass model training.
+
+The merged dataset consisted of 12 features: Age, primary languages, birth country, marital status, education levels, household sizes, income levels, employment statuses, visit counts and the distance features including distance to a hospital in km, predicted driving time, and predicted public transit time.
+
+## Modeling
+A multilabel classification model was trained using the dataset to predict the three most likely barriers to healthcare patients and another was trained to predict the three most likely action needed to be taken. The model was set up using Python and the Keras API. The multilabel models used were neural networks consisting of Convolutional layers, MaxPooling layers, Dense layers, and Dropout layers. The multiclass classification of visit intensity was done with a Support Vector Machine algorithm, specifically the LinearSVC function. Average performance metrics (accuracy, precision, recall, and F1 scores) were calculated over the course of a K-fold cross validation. These average metrics were determined for individual barrier and action classes as well as for all classes as a whole.
+
+## Analysis
+
+
+
+
