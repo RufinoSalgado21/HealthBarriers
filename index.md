@@ -1,37 +1,11 @@
-## Welcome to GitHub Pages
+## Multilabel and Multiclass Analysis of Social Determinants of Health
+###Project Overview
+This project involved preprocessing datasets of patient demographic information (primary languages, income levels, etc.) and medical history (visit information, case management notes, etc.). The resulting dataset was used to train multilabel and multiclass classification models. Their predictions and correlational relationships between features were used to determine the most influential factors in predicting barriers to healthcare, actions providers would need to take in reponse, and the intensity of visits for patients. These results were also used to provide suggestions for future work on building predictive models for healthcare providers.
 
-You can use the [editor on GitHub](https://github.com/RufinoSalgado21/HealthBarriers/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+###Preprocessing
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Datasets were provided by Northwestern researchers and healthcare providers. Four datasets were provided: two describing patients from DuPage county and two describing patients from the Chinatown neighborhood in Chicago. Each pair of datasets including one dedicated to patient demographic information and the other for medical histories.
 
-### Markdown
+Datasets for each location had to be merged according to patient ID's to ensure each patient would have a complete set of data to analyze. In total, 674 complete sets of patient data. 
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/RufinoSalgado21/HealthBarriers/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+In order to merge all datasets into one consolidated set, data had to be reformated for each feature to have consistent values. Lists of three most frequent barriers encountered by each patient were created as validation data for model training. The same was done for actions taken by healthcare providers. The number of individual visits recorded per patient 
