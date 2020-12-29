@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>HealthBarriers</title>
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="HealthBarriers" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="https://rufinosalgado21.github.io/HealthBarriers/" />
+<meta property="og:url" content="https://rufinosalgado21.github.io/HealthBarriers/" />
+<meta property="og:site_name" content="HealthBarriers" />
+<script type="application/ld+json">
+{"@type":"WebSite","headline":"HealthBarriers","url":"https://rufinosalgado21.github.io/HealthBarriers/","name":"HealthBarriers","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#157878">
+    <link rel="stylesheet" href="/HealthBarriers/assets/css/style.css?v=2f46d7374b6c7d32ff2ec6b003e71583d3a89284">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">HealthBarriers</h1>
+      <h2 class="project-tagline"></h2>
+      
+        <a href="https://github.com/RufinoSalgado21/HealthBarriers" class="btn">View on GitHub</a>
+      
+      
+    </section>
+
+    <section class="main-content">
+      <link rel="stylesheet" href="index.css" />
+
+<script type="text/javascript" src="index.js"></script>
+
+<h1 id="multilabel-and-multiclass-analysis-of-social-determinants-of-health">Multilabel and Multiclass Analysis of Social Determinants of Health</h1>
+<h2 id="project-overview">Project Overview</h2>
+
+<p>This project involved preprocessing datasets of patient demographic information (primary languages, income levels, etc.) and medical history (visit information, case management notes, etc.). The resulting dataset was used to train multilabel and multiclass classification models. Their predictions and correlational relationships between features were used to determine the most influential factors in predicting <strong>barriers to healthcare</strong>, <strong>actions taken in response</strong> by providers, and the <strong>intensity of visits</strong> for patients. These results were also used to provide suggestions for future work on building predictive models for healthcare providers.</p>
+
+<h2 id="preprocessing">Preprocessing</h2>
+
+<p>Datasets were provided by Northwestern researchers and healthcare providers. Four datasets were provided: two describing patients from DuPage county and two describing patients from the Chinatown neighborhood in Chicago. Each pair of datasets including one dedicated to patient demographic information and the other for medical histories.</p>
+
+<p>Datasets for each location had to be merged according to patient ID’s to ensure each patient would have a complete set of data to analyze. In total, <strong>674</strong> complete sets of patient data.</p>
+
+<p>In order to merge all datasets into one consolidated set, data had to be reformated for each feature to have consistent values. To extract further features from existing data, the Google Maps API was used with patients’ zip code information to determine nearest hospitals, distance to those hospitals, and predicted travel times. Lists of three most frequent barriers encountered by each patient were created as validation data for model training. The same was done for actions taken by healthcare providers. The number of individual visits recorded per patient were also counted as validation data for multiclass model training.</p>
+
+<p>The merged dataset consisted of <strong>12 features</strong>:</p>
+<ul>
+  <li>age</li>
+  <li>primary language</li>
+  <li>birth country</li>
+  <li>marital status</li>
+  <li>education level</li>
+  <li>household size</li>
+  <li>income level</li>
+  <li>employment status</li>
+  <li>visit count</li>
+  <li>distance to a hospital in km</li>
+  <li>predicted driving time to hospital</li>
+  <li>predicted public transit time to hospital</li>
+</ul>
+
+<h2 id="modeling">Modeling</h2>
+<p>A multilabel classification model was trained using the dataset to predict the three most likely barriers to healthcare patients and another was trained to predict the three most likely action needed to be taken. The model was set up using <strong>Python</strong> and the <strong>Keras API</strong>. The multilabel models used were neural networks consisting of Convolutional layers, MaxPooling layers, Dense layers, and Dropout layers. The multiclass classification of visit intensity was done with a Support Vector Machine algorithm, specifically the LinearSVC function. Average performance metrics (accuracy, precision, recall, and F1 scores) were calculated over the course of a K-fold cross validation. These average metrics were determined for individual barrier and action classes as well as for all classes as a whole.</p>
+
+<h2 id="analysis">Analysis</h2>
+
+<p>Correlational relationships between features and the barriers reported by patients suggest primary languages.</p>
+
+<h4 id="multilabal-classification">Multilabal Classification</h4>
+<hr />
+<p><img src="https://github.com/RufinoSalgado21/HealthBarriers/blob/master/barrier_predictions.png" alt="Kitten" title="A cute kitten" width="150" height="100" /></p>
+
+<hr />
+
+<div class="slideshow-container">
+
+<div class="mySlides fade">
+  <div class="numbertext">1 / 2</div>
+  <img src="https://github.com/RufinoSalgado21/HealthBarriers/blob/master/barrier_predictions.png" style="width:100%" />
+  <div class="text">Barrier Predictions</div>
+</div>
+
+<div class="mySlides fade">
+  <div class="numbertext">2 / 2</div>
+  <img src="https://github.com/RufinoSalgado21/HealthBarriers/blob/master/action_predictions.png" style="width:100%" />
+  <div class="text">Action Predictions</div>
+</div>
+
+<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+<a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+</div>
+
+
+      <footer class="site-footer">
+        
+          <span class="site-footer-owner"><a href="https://github.com/RufinoSalgado21/HealthBarriers">HealthBarriers</a> is maintained by <a href="https://github.com/RufinoSalgado21">RufinoSalgado21</a>.</span>
+        
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
+      </footer>
+    </section>
+
+    
+  </body>
+</html>
