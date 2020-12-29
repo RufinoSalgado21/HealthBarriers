@@ -40,6 +40,8 @@ Correlational relationships between features and the barriers reported by patien
 <img src="https://github.com/RufinoSalgado21/HealthBarriers/blob/master/barrier_predictions.png" alt="Kitten"
 	title="A cute kitten" width="150" height="100" />
 
+-----------
+
 <div class="slideshow-container">
 
 <div class="mySlides fade">
