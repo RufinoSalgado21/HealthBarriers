@@ -1,3 +1,6 @@
+<link rel="stylesheet" href="index.css">
+<script type="text/javascript" src="index.js"></script>
+
 # Multilabel and Multiclass Analysis of Social Determinants of Health
 ## Project Overview
 
@@ -36,8 +39,6 @@ Correlational relationships between features and the barriers reported by patien
 -----------
 <img src="https://github.com/RufinoSalgado21/HealthBarriers/blob/master/barrier_predictions.png" alt="Kitten"
 	title="A cute kitten" width="150" height="100" />
-![Correlations](https://github.com/RufinoSalgado21/HealthBarriers/blob/master/barrier_predictions.png)
-![Correlations](https://github.com/RufinoSalgado21/HealthBarriers/blob/master/action_predictions.png)
 
 <div class="slideshow-container">
 
