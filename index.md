@@ -30,7 +30,7 @@ A multilabel classification model was trained using the dataset to predict the t
 
 ## Analysis
 
-Correlational relationships between features and the barriers reported by patients suggest primary languages
+Correlational relationships between features and the barriers reported by patients suggest primary languages.
 
-
+![Correlations](https://github.com/RufinoSalgado21/HealthBarriers/blob/master/feature_barrier_correlations_a.png)
 
