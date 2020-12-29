@@ -1,25 +1,20 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>HealthBarriers</title>
-    
-  </head>
-  <link rel="stylesheet" href="index.css" />
-  <script type="text/javascript" src="index.js"></script>
+
+</head>
+<link rel="stylesheet" href="index.css" />
+<script type="text/javascript" src="index.js"></script>
 <body>
-  <section class="page-header">
-    <h1 class="project-name">HealthBarriers</h1>
-    <h2 class="project-tagline"></h2>
+<section class="page-header">
+    <h1 class="project-name">Multilabel and Multiclass Analysis of Social Determinants of Health</h1>
 
-      <a href="https://github.com/RufinoSalgado21/HealthBarriers" class="btn">View on GitHub</a>
-  </section>
-    <p><img src="https://user-images.githubusercontent.com/32345481/103259736-3e8c4400-4960-11eb-839e-eba9e98de1a5.png" alt="barrier predictions" title="Barrier Predictions" width="150" height="100" /></p>
+    <button class="btn" href="https://github.com/RufinoSalgado21/HealthBarriers">View on GitHub</button>
+</section>
 
-  <section class="main-content">
-    <img src="https://github.com/RufinoSalgado21/HealthBarriers/blob/master/barrier_predictions.PNG" alt="barrier predictions" title="Barrier Predictions" width="150" height="100" >
-
-    <h1 id="multilabel-and-multiclass-analysis-of-social-determinants-of-health">Multilabel and Multiclass Analysis of Social Determinants of Health</h1>
+<section class="main-content">
     <h2 id="project-overview">Project Overview</h2>
 
     <p>This project involved preprocessing datasets of patient demographic information (primary languages, income levels, etc.) and medical history (visit information, case management notes, etc.). The resulting dataset was used to train multilabel and multiclass classification models. Their predictions and correlational relationships between features were used to determine the most influential factors in predicting <strong>barriers to healthcare</strong>, <strong>actions taken in response</strong> by providers, and the <strong>intensity of visits</strong> for patients. These results were also used to provide suggestions for future work on building predictive models for healthcare providers.</p>
@@ -34,57 +29,54 @@
 
     <p>The merged dataset consisted of <strong>12 features</strong>:</p>
     <ul>
-      <li>age</li>
-      <li>primary language</li>
-      <li>birth country</li>
-      <li>marital status</li>
-      <li>education level</li>
-      <li>household size</li>
-      <li>income level</li>
-      <li>employment status</li>
-      <li>visit count</li>
-      <li>distance to a hospital in km</li>
-      <li>predicted driving time to hospital</li>
-      <li>predicted public transit time to hospital</li>
+        <li>age</li>
+        <li>primary language</li>
+        <li>birth country</li>
+        <li>marital status</li>
+        <li>education level</li>
+        <li>household size</li>
+        <li>income level</li>
+        <li>employment status</li>
+        <li>visit count</li>
+        <li>distance to a hospital in km</li>
+        <li>predicted driving time to hospital</li>
+        <li>predicted public transit time to hospital</li>
     </ul>
 
     <h2 id="modeling">Modeling</h2>
-    <p>A multilabel classification model was trained using the dataset to predict the three most likely barriers to healthcare patients and another was trained to predict the three most likely action needed to be taken. 
-      The model was set up using <strong>Python</strong> and the <strong>Keras API</strong>. The multilabel models used were neural networks consisting of Convolutional layers, MaxPooling layers, Dense layers, and Dropout layers. 
-      The multiclass classification of visit intensity was done with a Support Vector Machine algorithm, specifically the LinearSVC function. Average performance metrics (accuracy, precision, recall, and F1 scores) were calculated 
-      over the course of a K-fold cross validation. These average metrics were determined for individual barrier and action classes as well as for all classes as a whole.</p>
+    <p>A multilabel classification model was trained using the dataset to predict the three most likely barriers to healthcare patients and another was trained to predict the three most likely action needed to be taken.
+        The model was set up using <strong>Python</strong> and the <strong>Keras API</strong>. The multilabel models used were neural networks consisting of Convolutional layers, MaxPooling layers, Dense layers, and Dropout layers.
+        The multiclass classification of visit intensity was done with a Support Vector Machine algorithm, specifically the LinearSVC function. Average performance metrics (accuracy, precision, recall, and F1 scores) were calculated
+        over the course of a K-fold cross validation. These average metrics were determined for individual barrier and action classes as well as for all classes as a whole.</p>
 
     <h2 id="analysis">Analysis</h2>
 
-    <p>Correlational relationships between features and the barriers reported by patients suggest primary languages.</p>
+    <p style="margin-bottom: 5vw ">Correlational relationships between features and the barriers reported by patients suggest primary languages.</p>
 
-    <h4 id="multilabal-classification">Multilabel Classification</h4>
-    <hr />
-    <p><img src="https://user-images.githubusercontent.com/32345481/103259736-3e8c4400-4960-11eb-839e-eba9e98de1a5.png" alt="barrier predictions" title="Barrier Predictions" width="150" height="100" /></p>
-
-    <hr />
     <div class="slideshow-container">
 
-    <div class="mySlides fade">
-      <div class="numbertext">1 / 2</div>
-      <img src="https://user-images.githubusercontent.com/32345481/103259736-3e8c4400-4960-11eb-839e-eba9e98de1a5.png" style="width:100%" />
-      <div class="text">Barrier Predictions</div>
+        <div class="mySlides fade">
+
+            <img id="barrierpred" src="https://user-images.githubusercontent.com/32345481/103307670-45559e00-49d6-11eb-987f-8aa24266ad5a.png"/>
+            <div class="numbertext"><h4>Barrier Predictions</h4></div>
+        </div>
+
+        <div class="mySlides fade">
+
+            <img id="actionpred" src="https://user-images.githubusercontent.com/32345481/103306596-88fad880-49d3-11eb-984b-6d4a7557e4ae.png" />
+            <div class="numbertext"><h4>Actions Taken Predictions</h4></div>
+        </div>
+
+        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+        <a class="next" onclick="plusSlides(1)">&#10095;</a>
+
     </div>
 
-    <div class="mySlides fade">
-      <div class="numbertext">2 / 2</div>
-      <img src="https://user-images.githubusercontent.com/32345481/103260024-90819980-4961-11eb-9440-a7b9cba2496b.png" style="width:100%" />
-      <div class="text">Action Predictions</div>
-    </div>
-
-    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-    <a class="next" onclick="plusSlides(1)">&#10095;</a>
-
-    </div>
-      <footer class="site-footer">
-          <span class="site-footer-owner"><a href="https://github.com/RufinoSalgado21/HealthBarriers">HealthBarriers</a> is maintained by <a href="https://github.com/RufinoSalgado21">RufinoSalgado21</a>.</span>
+    <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/RufinoSalgado21/HealthBarriers">HealthBarriers</a> is maintained by <a href="https://github.com/RufinoSalgado21">RufinoSalgado21</a>.</span>
         <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a>.</span>
-      </footer>
-    </section>
-  </body>
+    </footer>
+</section>
+</body>
+<script>showSlides(1)</script>
 </html>
