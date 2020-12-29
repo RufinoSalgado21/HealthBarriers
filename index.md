@@ -32,5 +32,28 @@ A multilabel classification model was trained using the dataset to predict the t
 
 Correlational relationships between features and the barriers reported by patients suggest primary languages.
 
-![Correlations](https://github.com/RufinoSalgado21/HealthBarriers/blob/master/feature_barrier_correlations_a.png)
+#### Multilabal Classification
+-----------
+<img src="https://github.com/RufinoSalgado21/HealthBarriers/blob/master/barrier_predictions.png" alt="Kitten"
+	title="A cute kitten" width="150" height="100" />
+![Correlations](https://github.com/RufinoSalgado21/HealthBarriers/blob/master/barrier_predictions.png)
+![Correlations](https://github.com/RufinoSalgado21/HealthBarriers/blob/master/action_predictions.png)
 
+<div class="slideshow-container">
+
+<div class="mySlides fade">
+  <div class="numbertext">1 / 2</div>
+  <img src="https://github.com/RufinoSalgado21/HealthBarriers/blob/master/barrier_predictions.png" style="width:100%">
+  <div class="text">Barrier Predictions</div>
+</div>
+
+<div class="mySlides fade">
+  <div class="numbertext">2 / 2</div>
+  <img src="https://github.com/RufinoSalgado21/HealthBarriers/blob/master/action_predictions.png" style="width:100%">
+  <div class="text">Action Predictions</div>
+</div>
+
+<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+<a class="next" onclick="plusSlides(1)">&#10095;</a>
+
+</div>
