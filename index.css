@@ -29,6 +29,10 @@ h2, h4{
     text-align: center;
 }
 
+h4{
+    margin-bottom:0px;
+}
+
 strong{
     color: darkslategray;
 }
@@ -38,16 +42,27 @@ strong{
     width: 85vw;
     height: 45vw;
     background-color: #717171;
+    border: solid 2px black;
+    margin-left: -2vw;
+}
+
+.mySlidesB {
+    display: none;
+    width: 85vw;
+    height: 45vw;
+    background-color: #717171;
+    border: solid 2px black;
+    margin-left: -2vw;
 }
 
 /* Slideshow container */
 .slideshow-container {
-    height: 60vw;
+    height: 50vw;
     width: 85vw;
     position: relative;
-    margin:0px;
     display: block;
     border: solid white;
+    margin: 0px 0px 11vw;
 }
 
 .slides-bg{
@@ -113,7 +128,9 @@ li{
     top: 50%;
     width: auto;
     padding: 16px;
-    margin-top: -22px;
+    margin-top: -10vw;
+    margin-left: -2vw;
+    margin-right: 2vw;
     color: #fcfbfb;
     background-color: #a5a4a4;
     font-weight: bold;
@@ -169,4 +186,21 @@ li{
 
 .site-footer{
     margin-top: 10vw;
+    text-align: -webkit-center;
+    padding: 40px;
+    margin: 0px;
+    margin-left: -10vw;
+    background-color: darkslategray;
+    font-size: 30px;
+    color: white;
+    width: 100vw;
+}
+
+a{
+    color: white;
+    text-decoration: none;
+}
+
+a:hover{
+    text-decoration: underline;
 }
