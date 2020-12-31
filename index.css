@@ -1,5 +1,28 @@
+/**
+Default Computer Size
+Elements
+ */
+a{
+    color: white;
+    text-decoration: none;
+}
 
+a:hover{
+    text-decoration: underline;
+}
+
+p{
+    text-align: justify;
+    text-justify: inter-word;
+    font-size: 1.5vw;
+}
 img {vertical-align: middle;}
+
+li{
+    font-weight: bold;
+    font-size: 1.5vw;
+    color: darkslategray;
+}
 
 html{
     width: 100%;
@@ -27,6 +50,7 @@ img{
 h2, h4{
     color: darkslategray;
     text-align: center;
+    font-size: 2vw;
 }
 
 h4{
@@ -36,7 +60,9 @@ h4{
 strong{
     color: darkslategray;
 }
-
+/**
+Classes
+ */
 .mySlides {
     display: none;
     width: 85vw;
@@ -56,9 +82,9 @@ strong{
 }
 
 /* Slideshow container */
-.slideshow-container {
-    height: 50vw;
-    width: 85vw;
+.slideshow-container, .slideshow-containerB {
+    min-height: 65vw;
+    width: 85.5vw;
     position: relative;
     display: block;
     border: solid white;
@@ -75,18 +101,12 @@ strong{
     width: 80vw;
 }
 
-li{
-    font-weight: bold;
-    font-size: 15px;
-    color: darkslategray;
-}
 .page-header{
     text-align: -webkit-center;
-    padding-top: 40px;
-    padding-bottom: 40px;
-    padding-right: 100px;
-    padding-left: -10px;
+    word-wrap: break-word;
+    padding: 5vw 2vw 5vw 1vw;
     margin: 0px;
+    margin-left: -1vw;
     background-color: darkslategray;
     font-size: 30px;
     color: white;
@@ -193,14 +213,86 @@ li{
     background-color: darkslategray;
     font-size: 30px;
     color: white;
-    width: 100vw;
+    width: 95vw;
 }
 
-a{
-    color: white;
-    text-decoration: none;
+/**
+Small screen
+ */
+@media only screen and (max-width:600px) {
+
+    .page-header{
+        max-width: 95vw;
+        font-size: 5vw;
+    }
+    p{
+        max-width: 80vw;
+        font-size: 4vw;
+        text-align: justify;
+        text-justify: inter-word;
+    }
+    li{
+        font-size: 4vw;
+    }
+    .slideshow-container{
+        max-height: 240vw;
+        min-height: 220vw;
+        margin-bottom: 0vh;
+        max-width:85.5vw;
+        min-width: 85.5vw;
+    }
+    .slideshow-containerB{
+        max-height: 240vw;
+        min-height: 220vw;
+        margin-top: 5vh;
+        max-width:85.5vw;
+        min-width: 85.5vw;
+    }
+    h2, h3{
+        font-size: 5vw;
+    }
+    .site-footer{
+        width: 84vw;
+    }
+    .prev, .next{
+        top:20%;
+    }
+    
 }
 
-a:hover{
-    text-decoration: underline;
+/**
+Medium Screen
+ */
+@media only screen and (min-width:601px) and  (max-width:1000px) {
+
+    .page-header{
+        max-width: 95vw;
+    }
+    p{
+        max-width: 80vw;
+        font-size: 3vw;
+        text-align: justify;
+        text-justify: inter-word;
+    }
+    li{
+        font-size: 3vw;
+    }
+    .slideshow-container, .slideshow-containerB{
+        max-height: 160vw;
+        min-height: 145vw;
+        margin-bottom: 0vh;
+        max-width:85.5vw;
+        min-width: 85.5vw;
+    }
+
+    h2, h3{
+        font-size: 4vw;
+    }
+    .site-footer{
+        width: 95vw;
+    }
+    .prev, .next{
+        top:20%;
+    }
+
 }
