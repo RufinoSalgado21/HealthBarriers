@@ -83,7 +83,7 @@ Classes
 
 /* Slideshow container */
 .slideshow-container, .slideshow-containerB {
-    min-height: 65vw;
+    min-height: 70vw;
     width: 85.5vw;
     position: relative;
     display: block;
@@ -278,8 +278,8 @@ Medium Screen
         font-size: 3vw;
     }
     .slideshow-container, .slideshow-containerB{
-        max-height: 160vw;
-        min-height: 145vw;
+        max-height: 170vw;
+        min-height: 170vw;
         margin-bottom: 0vh;
         max-width:85.5vw;
         min-width: 85.5vw;
