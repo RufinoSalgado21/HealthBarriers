@@ -23,7 +23,7 @@
 
     <p>Datasets were provided by Northwestern researchers and healthcare providers. Four datasets were provided: two describing patients from DuPage county and two describing patients from the Chinatown neighborhood in Chicago. Each pair of datasets including one dedicated to patient demographic information and the other for medical histories.</p>
 
-    <p>Datasets for each location had to be merged according to patient ID’s to ensure each patient would have a complete set of data to analyze. In total, <strong>674</strong> complete sets of patient data.</p>
+    <p>Datasets for each location had to be merged according to patient ID’s to ensure each patient would have a complete set of data to analyze. In total, <strong>673</strong> complete sets of patient data.</p>
 
     <p>In order to merge all datasets into one consolidated set, data had to be reformated for each feature to have consistent values. To extract further features from existing data, the Google Maps API was used with patients’ zip code information to determine nearest hospitals, distance to those hospitals, and predicted travel times. Lists of three most frequent barriers encountered by each patient were created as validation data for model training. The same was done for actions taken by healthcare providers. The number of individual visits recorded per patient were also counted as validation data for multiclass model training.</p>
 
@@ -96,7 +96,7 @@
         </script>
         <div class="mySlidesB fade">
 
-            <img id="barrierpred" src="https://user-images.githubusercontent.com/32345481/103307670-45559e00-49d6-11eb-987f-8aa24266ad5a.png"/>
+            <img id="barrierpred" src="https://user-images.githubusercontent.com/32345481/103449232-08eea000-4c6b-11eb-8820-8ef7f4246180.png"/>
             <div class="numbertext"><h4>Barrier Predictions</h4></div>
             <p>Training a multilabel neural network on the data produced a graph representing the set of correct and incorrect predictions for each barrier. For instance, the three most common barriers reported were <strong>None</strong>, <strong>Uncomfortable with English</strong>, and <strong>Case Management</strong>. As shown in the graph according to their respective colors in the legend, the model largely predicted these classes correctly when they occurred. However, their overwhelming frequency appears to have skewed the data and the model's results. Because of this, barriers which appear less than those visible in the graph (many with single digit appearances) were consistently misclassified and therefore excluded to focus on the most common barriers</p>
                 <p>This skew presents itself among predictions for other classes as a large portion of their incorrect predictions belong to the three most common barriers (in purple, yellow, and green). To counter act the influence of this skewed data, future data collection should place an emphasis on including patients who encountered the less common barriers to train the model on.</p>
@@ -106,18 +106,28 @@
 
         <div class="mySlidesB fade">
 
-            <img id="actionpred" src="https://user-images.githubusercontent.com/32345481/103433105-db452080-4bb0-11eb-84d1-e3332c4e1b64.png" />
+            <img id="actionpred" src="https://user-images.githubusercontent.com/32345481/103449224-efe5ef00-4c6a-11eb-9024-64811df9eddf.png" />
             <div class="numbertext"><h4>Actions Taken Predictions</h4></div>
             <p><strong>Actions Taken</strong> classes were more evenly represented in the data than barriers. The most commonly reported action, <strong>Accompaniment to Health Service</strong>, is the most accurately predicted. This is possibly due to having the greatest number of examples to train the model or its strong association with <strong>Chinese Primary Language</strong> patients. However, other classes were predicted with less accuracy. Most classes were predicted incorrectly more often than not. For example, with the second most common class, <strong>Call Patient</strong>, more than half of its cases were misclassified as one of six other classes.</p>
             <p>Unfortunately, these classes suffer from redundancies similar to the barrier classes and could also be reduced into broader categories. Several <strong>Actions Taken</strong> involving contacting patients for the purposes of providing a service or verifying information, including <strong>Call Patient</strong>, <strong>Scheduling and Rescheduling Appointments</strong>, requesting <strong>Consent or Exiting Patients</strong>, <strong>Appointment/Information Verification</strong>, and  providing <strong>Emotional Support/Active Learning</strong>. Though there is a greater distribution of classes in the data, similarities between the listed classes led to their misclassification as one another.Therefore, the list of potential <strong>Actions Taken</strong> classes would also benefit from reducing actions involving communicating with patients into those requesting information and those providing a service.
             </p>
         </div>
 
+        <div class="mySlidesB fade">
+
+            <img id="visitpred" src="https://user-images.githubusercontent.com/32345481/103449242-376c7b00-4c6b-11eb-9732-8a8ab159670a.png" />
+            <div class="numbertext"><h4>Visit Intensity Predictions</h4></div>
+            <p></p>
+        </div>
         <a class="prev" onclick="plusSlidesB(-1)">&#10094;</a>
         <a class="next" onclick="plusSlidesB(1)">&#10095;</a>
 
     </div>
 <hr>
+    <h2>Future Work</h2>
+    <p>
+       This
+    </p>
     <footer class="site-footer">
         <p class="site-footer-owner"><a href="https://github.com/RufinoSalgado21/HealthBarriers">HealthBarriers</a> is maintained by <a href="https://github.com/RufinoSalgado21">Rufino Salgado</a>.<br/>
         This page was generated by <a href="https://pages.github.com">GitHub Pages</a>
